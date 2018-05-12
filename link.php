@@ -22,8 +22,6 @@
     </h1>
     <center><h4>Gyms near: Ardsley High School, New York</h4></center>
 
-
-
     <div id="gymMap">
       <div id="map"></div>
       <script src="map.js"></script>

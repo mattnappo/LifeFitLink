@@ -6,7 +6,7 @@
 </head>
 <body>
 
-	<a href="PUT HOMEPAGE HERE"><h1> LifeFitLink </h1></a>
+	<a href="index.html"><h1> LifeFitLink </h1></a>
 	<h2> In the space below, please enter your username and password.</h2>
 
 	<center>
@@ -30,7 +30,7 @@
 	$password = "";
 	$secPass = "";
 	$secured = false;
-
+		session_start();
 		if(isset($_POST['login'])) {
 			$username = $_POST['username'];
 			$password = $_POST['password'];
@@ -50,7 +50,7 @@
 			        }
 			    }
 			    if($secured==true) {
-			        header("location: link.php");
+						$_SESSION['username'] = "true";
 			    } else {
 						echo '<script>alert("Incorrect login.")</script>';
 					}
