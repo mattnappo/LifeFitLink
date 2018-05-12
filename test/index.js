@@ -17,11 +17,30 @@ function initMap() {
       center: location,
       zoom: 14
     });
+
+    var request = {
+      location: location,
+      radius: '4828.03',
+      type: ['workout gyms']
+    };
+
+    service = new google.maps.places.PlacesService(map);
+    service.nearbySearch(request, callback);
+
+  });
+
+}
+function createMarker(place) {
+  new google.maps.Marker({
+    position: place.geometry.location,
+    map: map
   });
 }
-
-var request = {
-  location: location,
-  radius: '4828.03', // Three mile radius
-  type: ['workout gym']
-};
+function callback(results, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+    for (var i = 0; i < results.length; i++) {
+      var place = results[i];
+      createMarker(results[i]);
+    }
+  }
+}
