@@ -1,11 +1,29 @@
 var map;
-function initMap() {
+let city;
+function lol() {
+  city = document.getElementById("formerino");
+}
+function $_GET(param) {
+	var vars = {};
+	window.location.href.replace( location.hash, '' ).replace(
+		/[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+		function( m, key, value ) { // callback
+			vars[key] = value !== undefined ? value : '';
+		}
+	);
 
+	if ( param ) {
+		return vars[param] ? vars[param] : null;
+	}
+	return vars;
+}
+function initMap() {
   let location = { };
   var geocoder =  new google.maps.Geocoder();
-  var city = "dobbs ferry, ny";
 
-  geocoder.geocode( { 'address': city + ', us'}, function(results, status) {
+  var locc = $_GET("loc");
+
+  geocoder.geocode( { 'address': "ardsley high school, ny" + ', us'}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
       var cityLat = results[0].geometry.location.lat();
       var cityLng = results[0].geometry.location.lng();
