@@ -17,7 +17,11 @@
         </div>
       </div>
       <div class="w3-bar w3-cyan w3-large" style="z-index:4;">
-        DEPRECIATED NAV BAR
+        <a class="w3-bar-item w3-button w3-hide-medium w3-hide-small w3-hover-white w3-padding-16" href="index.php">HOME</a>
+        <a class="w3-bar-item w3-button w3-hide-medium w3-hide-small w3-hover-white w3-padding-16" href="gyms.php">GYMS</a>
+        <a class="w3-bar-item w3-button w3-hide-medium w3-hide-small w3-hover-white w3-padding-16" href="people.php">PEOPLE</a>
+        <a class="w3-bar-item w3-button w3-hide-medium w3-hover-white w3-padding-16 w3-right" onclick="document.getElementById('registerWindow').style.display='block'">REGISTER</a>
+        <a class="w3-bar-item w3-button w3-hide-medium w3-hover-white w3-padding-16 w3-right" onclick="document.getElementById('loginWindow').style.display='block'">LOGIN</a>
       </div>
     </div>
 
@@ -32,11 +36,8 @@
 
 
 <?php
-  echo '<script>alert(' . $_SESSION["authentication_error"] . ');</script>';
-  echo '<script>alert(' . $_SESSION["authentication"] . ');</script>';
-  if($_SESSION['authentication'] == false) {
-    echo '<script>alert("its false lol");</script>';
-    $_SESSION['authentication_error'] = true;
-    //header("location: index.php");
+  session_start();
+  if($_SESSION['allowedToGoToMaps'] == false) {
+    header("location: index.php?showErr=true");
   }
 ?>

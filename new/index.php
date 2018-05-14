@@ -1,10 +1,4 @@
-<?php
-  session_start();
-  if($_SESSION['authentication_error'] == true) {
-    echo '<script>alert(' . $_SESSION["authentication_error"] . ');</script>';
-    echo '<script>document.getElementById("authentication_error").style.display = "block";</script>';
-  }
-?>
+<?php session_start(); ?>
 <html lang="en">
 
   <head>
@@ -69,6 +63,19 @@
       </div>
     </div>
 
+    <div id="usernameTaken" class="w3-modal">
+      <div class="w3-modal-content w3-card-4 w3-animate-opacity" style="max-width:600px">
+        <div class="w3-center"><br>
+          <span onclick="document.getElementById('usernameTaken').style.display='none'" class="w3-button w3-xlarge w3-transparent w3-display-topright" title="Close Modal">×</span>
+          <h2>OOPS!</h2>
+          <p class="w3-margin-bottom">
+            That username is already in use!
+          </p>
+          <br>
+        </div>
+      </div>
+    </div>
+
     <div id="authentication_error" class="w3-modal">
       <div class="w3-modal-content w3-card-4 w3-animate-opacity" style="max-width:600px">
         <div class="w3-center"><br>
@@ -109,6 +116,12 @@
   </body>
 </html>
 <?php
+  if(isset($_GET['showErr'])) {
+    echo '<script>document.getElementById("authentication_error").style.display = "block";</script>';
+    // $_SESSION['showErrMsg'] = false;
+  }
+?>
+<?php
 	$servername = "localhost";
 	$serverUser = "root";
 	$dbName = "main";
@@ -123,14 +136,34 @@
 			if ($conn->connect_error) {
 		    die("Connection failed: " . $conn->connect_error);
 			}
-			$sql = "INSERT INTO lifeFitLink (username, password) VALUES ('$username', '$hashed_password');";
-			if ($conn->query($sql) === TRUE) {
-        $_SESSION["authentication"] = true;
-        echo '<script>document.getElementById("registerSuccess").style.display = "block";</script>';
+      $usernameExists = false;
+      $sql = "SELECT id, username FROM lifeFitLink";
+			$result = $conn->query($sql);
+			if ($result->num_rows > 0) {
+				while($row = $result->fetch_assoc()) {
+					if($row['username'] == $username) {
+						$usernameExists = true;
+						break;
+					}
+				}
+				if($usernameExists == true) {
+					echo '<script>document.getElementById("usernameTaken").style.display = "block";</script>';
+				} else {
+					$sql = "INSERT INTO lifeFitLink (username, password) VALUES ('$username', '$hashed_password');";
+					if ($conn->query($sql) === TRUE) {
+            $_SESSION["allowedToGoToMaps"] = true;
+            if(isset($_SESSION['showErrMsg'])) {
+              $_SESSION['showErrMsg'] = false;
+            }
+            echo '<script>document.getElementById("registerSuccess").style.display = "block";</script>';
+					} else {
+						echo "Error: " . $sql . "<br>" . $conn->error;
+					}
+          $conn->close();
+				}
 			} else {
-		    echo "Error: " . $sql . "<br>" . $conn->error;
-			}
-      $conn->close();
+        echo '<script>alert("Empty database.");</script>';
+      }
     } else {
       echo '<script>alert("Passwords do not match!");</script>';
     }
