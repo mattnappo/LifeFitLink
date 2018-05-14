@@ -1,52 +1,23 @@
 var map;
 let city;
-function lol() {
-  city = document.getElementById("formerino");
-}
-function $_GET(param) {
-	var vars = {};
-	window.location.href.replace( location.hash, '' ).replace(
-		/[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
-		function( m, key, value ) { // callback
-			vars[key] = value !== undefined ? value : '';
-		}
-	);
-
-	if ( param ) {
-		return vars[param] ? vars[param] : null;
-	}
-	return vars;
-}
+var currentLocation;
 function initMap() {
-  let location = { };
-  var geocoder =  new google.maps.Geocoder();
-
-  var locc = $_GET("loc");
-
-  geocoder.geocode( { 'address': "ardsley high school, ny" + ', us'}, function(results, status) {
-    if (status == google.maps.GeocoderStatus.OK) {
-      var cityLat = results[0].geometry.location.lat();
-      var cityLng = results[0].geometry.location.lng();
-      location = { lat: cityLat, lng: cityLng };
-    } else {
-      alert("Error: " + status);
-    }
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: location,
-      zoom: 14
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      currentLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: currentLocation,
+        zoom: 14
+      });
+      var request = {
+        location: currentLocation,
+        radius: '4828.03',
+        type: ['workout gyms']
+      };
+      service = new google.maps.places.PlacesService(map);
+      service.nearbySearch(request, callback);
     });
-
-    var request = {
-      location: location,
-      radius: '4828.03',
-      type: ['workout gyms']
-    };
-
-    service = new google.maps.places.PlacesService(map);
-    service.nearbySearch(request, callback);
-
-  });
-
+  }
 }
 function createMarker(place) {
   new google.maps.Marker({

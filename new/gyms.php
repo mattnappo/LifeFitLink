@@ -20,8 +20,6 @@
         <a class="w3-bar-item w3-button w3-hide-medium w3-hide-small w3-hover-white w3-padding-16" href="index.php">HOME</a>
         <a class="w3-bar-item w3-button w3-hide-medium w3-hide-small w3-hover-white w3-padding-16" href="gyms.php">GYMS</a>
         <a class="w3-bar-item w3-button w3-hide-medium w3-hide-small w3-hover-white w3-padding-16" href="people.php">PEOPLE</a>
-        <a class="w3-bar-item w3-button w3-hide-medium w3-hover-white w3-padding-16 w3-right" onclick="document.getElementById('registerWindow').style.display='block'">REGISTER</a>
-        <a class="w3-bar-item w3-button w3-hide-medium w3-hover-white w3-padding-16 w3-right" onclick="document.getElementById('loginWindow').style.display='block'">LOGIN</a>
       </div>
     </div>
 

@@ -62,6 +62,18 @@
         </div>
       </div>
     </div>
+    <div id="loginSuccess" class="w3-modal">
+      <div class="w3-modal-content w3-card-4 w3-animate-opacity" style="max-width:600px">
+        <div class="w3-center"><br>
+          <span onclick="document.getElementById('loginSuccess').style.display='none'" class="w3-button w3-xlarge w3-transparent w3-display-topright" title="Close Modal">×</span>
+          <h2>LOGIN</h2>
+          <p class="w3-margin-bottom">
+            Logged in! You may now proceed to view the maps.
+          </p>
+          <br>
+        </div>
+      </div>
+    </div>
 
     <div id="usernameTaken" class="w3-modal">
       <div class="w3-modal-content w3-card-4 w3-animate-opacity" style="max-width:600px">
@@ -88,6 +100,30 @@
         </div>
       </div>
     </div>
+    <div id="loginError" class="w3-modal">
+      <div class="w3-modal-content w3-card-4 w3-animate-opacity" style="max-width:600px">
+        <div class="w3-center"><br>
+          <span onclick="document.getElementById('loginError').style.display='none'" class="w3-button w3-xlarge w3-transparent w3-display-topright" title="Close Modal">×</span>
+          <h2>OOPS!</h2>
+          <p class="w3-margin-bottom">
+            Incorrect username or password!
+          </p>
+          <br>
+        </div>
+      </div>
+    </div>
+    <div id="loggedOut" class="w3-modal">
+      <div class="w3-modal-content w3-card-4 w3-animate-opacity" style="max-width:600px">
+        <div class="w3-center"><br>
+          <span onclick="document.getElementById('loggedOut').style.display='none'" class="w3-button w3-xlarge w3-transparent w3-display-topright" title="Close Modal">×</span>
+          <h2>LOGOUT</h2>
+          <p class="w3-margin-bottom">
+            User has been logged out.
+          </p>
+          <br>
+        </div>
+      </div>
+    </div>
 
     <div class="w3-top">
       <div class="w3-row w3-white w3-padding">
@@ -99,8 +135,16 @@
         <a class="w3-bar-item w3-button w3-hide-medium w3-hide-small w3-hover-white w3-padding-16" href="index.php">HOME</a>
         <a class="w3-bar-item w3-button w3-hide-medium w3-hide-small w3-hover-white w3-padding-16" href="gyms.php">GYMS</a>
         <a class="w3-bar-item w3-button w3-hide-medium w3-hide-small w3-hover-white w3-padding-16" href="people.php">PEOPLE</a>
-        <a class="w3-bar-item w3-button w3-hide-medium w3-hover-white w3-padding-16 w3-right" onclick="document.getElementById('registerWindow').style.display='block'">REGISTER</a>
-        <a class="w3-bar-item w3-button w3-hide-medium w3-hover-white w3-padding-16 w3-right" onclick="document.getElementById('loginWindow').style.display='block'">LOGIN</a>
+
+        <?php
+          if(isset($_SESSION['loggedIn'])) {
+            echo '<a class="w3-bar-item w3-button w3-hide-medium w3-hover-white w3-padding-16 w3-right" href="logout.php">LOGOUT</a>';
+            echo '<a class="w3-bar-item w3-button w3-hide-medium w3-hover-white w3-padding-16 w3-right" href="account.php">MY ACCOUNT</a>';
+          } else {
+            echo '<a class="w3-bar-item w3-button w3-hide-medium w3-hover-white w3-padding-16 w3-right" onclick="document.getElementById(\'registerWindow\').style.display=\'block\'">REGISTER</a>';
+            echo '<a class="w3-bar-item w3-button w3-hide-medium w3-hover-white w3-padding-16 w3-right" onclick="document.getElementById(\'loginWindow\').style.display=\'block\'">LOGIN</a>';
+          }
+        ?>
       </div>
     </div>
 
@@ -108,7 +152,7 @@
       <div class="w3-panel w3-padding-large w3-card-4 w3-light-grey">
         <h1>LIFE-FIT-LINK</h1>
         <p>
-          What's the hardest part of working out? <u><b>Motivation</b></u>. As said by Zig Ziglar, an American author, "People often say that motivation doesn't last. Well, neither does bathing - that's why we recommend it daily." That is why the Masters Computer Science Team developed LifeFitLink. The app makes it simple to find the nearest gym within a 3 mile radius which allows the user to plan and set up times for meeting and working out. The built in "Find Friends" feature, the crux of the app, gives the client a profile database of people within their area, and allows the user to collaborate with different people while they exercise. Simply download, sign up, and search to find people to work out with at a gym near you.
+          What's the hardest part of working out? <u><b>Motivation</b></u>. As said by Zig Ziglar, an American author, "People often say that motivation doesn't last. Well, neither does bathing - that's why we recommend it daily." That is why the Masters Computer Science Team developed LifeFitLink. The app makes it simple to find the nearest gym within a 3 mile radius which allows the user to plan and set up times for meeting and working out. The built in "Link" feature, the crux of the app, gives the client a profile database of people within their area, and allows the user to collaborate with different people while they exercise. Simply download, sign up, and search to find people to work out with at a gym near you.
         </p>
       </div>
     </div>
@@ -119,6 +163,9 @@
   if(isset($_GET['showErr'])) {
     echo '<script>document.getElementById("authentication_error").style.display = "block";</script>';
     // $_SESSION['showErrMsg'] = false;
+  }
+  if(isset($_GET['loggedOut'])) {
+    echo '<script>document.getElementById("loggedOut").style.display = "block";</script>';
   }
 ?>
 <?php
@@ -167,5 +214,42 @@
     } else {
       echo '<script>alert("Passwords do not match!");</script>';
     }
+  }
+?>
+
+<?php
+  $servername = "localhost";
+  $serverUser = "root";
+  $dbName = "main";
+  $serverPass = "";
+  if(isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $hashed_password = md5($password);
+    $connection = new mysqli($servername, $serverUser, $serverPass, $dbName);
+    if ($connection->connect_error) {
+      die("Connection failed: " . $connection->connect_error);
+    }
+    $auth = false;
+    $sql = "SELECT id, username, password FROM lifeFitLink";
+    $result = $connection->query($sql);
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+        if($row['username'] == $username && $row['password'] == $hashed_password) {
+          $auth = true;
+          $_SESSION["allowedToGoToMaps"] = true;
+          if(isset($_SESSION['showErrMsg'])) {
+            $_SESSION['showErrMsg'] = false;
+          }
+          $_SESSION['loggedIn'] = true;
+          header("location: index.php");
+          echo '<script>document.getElementById("loginSuccess").style.display = "block";</script>';
+        }
+      }
+      if($auth == false) {
+        echo '<script>document.getElementById("loginError").style.display = "block";</script>';
+      }
+    }
+    $connection->close();
   }
 ?>
