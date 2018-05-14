@@ -1,0 +1,15 @@
+.body {
+  background-image: url("Gym.jpeg");
+  background-size: auto;
+}
+
+.middle {
+  text-align: center;
+  width: 50%;
+  margin-left: 25%;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}

@@ -13,8 +13,9 @@
 		<center>
 			<form class="w3-form" method="post" action="register.php">
 				<input type="text" placeholder="Username" name="username" /><br><br>
-				<input type="text" placeholder="Password"	name="password" /><br><br>
-				<input type="text" placeholder="Confirm Password" name="confirmpw" /><br><br>
+				<input type="password" placeholder="Password"	name="password" /><br><br>
+				<input type="password" placeholder="Confirm Password" name="confirmpw" /><br><br>
+				<input type="text" placeholder="Location" name="location" /><br><br>
 				<button name="register" type="submit" class="w3-button w3-blue">Register</button>
 			</form>
 		</center>

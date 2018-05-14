@@ -3,6 +3,7 @@
 <head>
 	<title>Login</title>
 	<link rel="stylesheet" type="text/css" href="login.css">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
 
@@ -12,7 +13,7 @@
 	<center>
 		<form method="post" action="login.php">
 			<input type="text" placeholder="Username" name="username" /><br><br>
-			<input type="text" placeholder="Password" name="password" /><br><br>
+			<input type="password" placeholder="Password" name="password" /><br><br>
 			<button type="submit" name="login" class="button">Login</button>
 		</form>
 	</center>
